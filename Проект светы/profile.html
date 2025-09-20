@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Профиль</title>
+<style>
+:root{
+--container-width:1200px;--accent:#2B7A78;--accent-light:#4CAF50;--accent-orange:#FF9800;
+--bg-gradient:linear-gradient(135deg,#f9f9f7 0%,#e8f5e9 100%);
+--text-dark:#2c3e50;--text-light:#666;--white:#fff;--shadow:0 2px 20px rgba(0,0,0,0.1);--shadow-hover:0 10px 40px rgba(0,0,0,0.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:'Arial',sans-serif;display:flex;flex-direction:column;min-height:100vh;background:var(--bg-gradient);color:var(--text-dark);}
+.container{max-width:var(--container-width);margin:0 auto;padding:1rem;}
+header{position:fixed;top:0;left:0;width:100%;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);padding:1rem 0;z-index:1000;box-shadow:var(--shadow);}
+nav{display:flex;justify-content:center;gap:2rem;}
+nav a{text-decoration:none;color:var(--text-dark);font-weight:500;padding:0.5rem 1.5rem;border-radius:25px;transition:0.3s;}
+nav a:hover{color:var(--accent-light);background:rgba(76,175,80,0.1);}
+nav a.active{background:var(--accent-light);color:var(--white);}
+main{flex:1;padding:140px 0 2rem;display:flex;flex-direction:column;align-items:center;}
+h1{text-align:center;font-size:2.5rem;background:linear-gradient(135deg,var(--accent-light) 0%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:30px;}
+.card{background:var(--white);border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.08);transition:0.3s;width:400px;margin-bottom:20px;}
+.card:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px);}
+input{width:100%;padding:0.5rem;margin-top:0.3rem;margin-bottom:1rem;border-radius:6px;border:1px solid #ccc;}
+button,.btn{background:var(--accent-light);color:#fff;border:none;padding:0.75rem 1.5rem;border-radius:8px;cursor:pointer;font-weight:500;width:100%;transition:0.3s;}
+button:hover{opacity:0.9;transform:translateY(-1px);}
+button + button{margin-top:10px;} /* Добавляет отступ между кнопками */
+footer{text-align:center;padding:2rem 0;color:var(--text-light);margin-top:auto;}
+</style>
+</head>
+<body>
+<header>
+<nav>
+<a href="index.html" class="nav-link">Главная</a>
+<a href="features.html" class="nav-link">Функции</a>
+
+<a href="auth.html" id="auth-link" class="nav-link">Войти</a>
+<a href="profile.html" id="profile-link" class="nav-link active">Профиль</a>
+    <a href="cart.html" id="cart-link">Корзина (0)</a>
+</nav>
+</header>
+
+<main class="container">
+<h1>Ваш профиль</h1>
+<div class="card">
+<h3>Данные пользователя</h3>
+<input type="text" id="profileName" placeholder="Имя">
+<input type="email" id="profileEmail" placeholder="Email" disabled>
+<button id="saveBtn">Сохранить изменения</button>
+<button id="logoutBtn">Выйти</button>
+</div>
+</main>
+
+<footer class="container">
+<p>© 2025 Полезные снеки</p>
+</footer>
+
+<script>
+// Ссылки навигации
+const authLink = document.getElementById("auth-link");
+const profileLink = document.getElementById("profile-link");
+
+// Получаем текущего пользователя
+let user = JSON.parse(localStorage.getItem("currentUser"));
+
+// Если нет пользователя, отправляем на auth
+if(!user){
+  alert("Сначала войдите!");
+  window.location.href="auth.html";
+} else {
+  authLink.style.display="none";
+  profileLink.style.display="inline-block";
+  document.getElementById("profileName").value = user.name;
+  document.getElementById("profileEmail").value = user.email;
+}
+
+// Сохранение изменений
+document.getElementById("saveBtn").addEventListener("click", function(){
+  let name = document.getElementById("profileName").value.trim();
+  if(!name){ alert("Имя не может быть пустым!"); return; }
+  user.name = name;
+
+  let users = JSON.parse(localStorage.getItem("users") || "[]");
+  let idx = users.findIndex(u => u.email === user.email);
+  if(idx !== -1){
+    users[idx].name = name;
+    localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("currentUser", JSON.stringify(user));
+    alert("Данные сохранены!");
+  }
+});
+
+// Выход
+document.getElementById("logoutBtn").addEventListener("click", function(){
+  localStorage.removeItem("currentUser");
+  alert("Вы вышли!");
+  window.location.href="index.html";
+});
+function updateCartCount(){
+  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  const totalQty = cart.reduce((s,i)=>s+i.qty,0);
+  const cartLink = document.getElementById("cart-link");
+  if(cartLink) cartLink.textContent = `Корзина (${totalQty})`;
+}
+updateCartCount();
+
+</script>
+</body>
+</html>

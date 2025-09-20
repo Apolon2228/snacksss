@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Корзина</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{
+  --accent:#2B7A78;
+  --accent-light:#4CAF50;
+  --accent-orange:#FF9800;
+  --bg-gradient:linear-gradient(135deg,#f9f9f7 0%,#e8f5e9 100%);
+  --text-dark:#2c3e50;
+  --text-light:#666;
+  --white:#fff;
+  --shadow:0 2px 20px rgba(0,0,0,0.1);
+  --shadow-hover:0 10px 40px rgba(0,0,0,0.15);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial, sans-serif;
+  background:var(--bg-gradient);
+  color:var(--text-dark);
+}
+
+/* ===== Header ===== */
+header{
+  position:fixed;top:0;left:0;width:100%;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(10px);
+  padding:1rem 0;z-index:1000;
+  box-shadow:var(--shadow);
+}
+.nav { display:flex; justify-content:center; gap:2rem; }
+.nav a{
+  text-decoration:none; color:var(--text-dark); font-weight:500;
+  padding:0.5rem 1.2rem; border-radius:25px; transition:0.25s;
+}
+.nav a:hover{ color:var(--accent-light); background: rgba(76,175,80,0.08); }
+.nav .active{ background:var(--accent-light); color:#fff; }
+
+/* ===== Container ===== */
+.container{
+  max-width:900px;
+  margin:140px auto 40px;
+  background:var(--white);
+  border-radius:12px;
+  box-shadow:var(--shadow);
+  padding:20px;
+  overflow-x:auto;
+}
+h1{
+  text-align:center;
+  margin-bottom:20px;
+  font-size:1.8rem;
+  color:var(--accent);
+}
+
+/* ===== Table ===== */
+table{width:100%;border-collapse:collapse;}
+th,td{padding:14px;text-align:center;}
+th{
+  background:#f4f6f6;
+  font-weight:600;
+  border-bottom:2px solid #ddd;
+}
+td{border-bottom:1px solid #eee;}
+
+input.qty{
+  width:60px;
+  padding:6px;
+  border:1px solid #ccc;
+  border-radius:6px;
+  text-align:center;
+}
+
+/* ===== Buttons ===== */
+.btn{
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  padding:6px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+  transition:.2s;
+}
+.btn:hover{opacity:0.9; transform:translateY(-2px);}
+.btn-delete{background:var(--accent-orange);}
+
+/* ===== Total и оплата ===== */
+.cart-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:20px;
+  padding-top:10px;
+
+}
+.total{
+  font-size:1.3rem;
+  font-weight:bold;
+  color:var(--text-dark);
+}
+footer{
+  text-align:center;
+  padding:2rem 0;
+  color:var(--text-light);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <a href="index.html">Главная</a>
+    <a href="features.html">Функции</a>
+    <a href="auth.html" id="auth-link">Войти</a>
+    <a href="profile.html" id="profile-link" style="display:none;">Профиль</a>
+    <a href="cart.html" class="active" id="cart-link">Корзина (0)</a>
+  </nav>
+</header>
+
+<div class="container">
+  <h1>Ваша корзина</h1>
+  <table id="cartTable">
+    <thead>
+      <tr><th>Товар</th><th>Цена</th><th>Кол-во</th><th>Сумма</th><th></th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+
+  <div class="cart-footer">
+    <div class="total" id="cartTotal">Корзина пуста.</div>
+    <button class="btn" id="checkoutBtn">Оплатить</button>
+  </div>
+</div>
+
+
+<script>
+const products = {
+  "miks": {title:"Микс орехов", price:199},
+  "crunch": {title:"Протеиновый батончик", price:129},
+  "fructs": {title:"Фруктовые чипсы", price:149},
+  "granola": {title:"Гранола с мёдом", price:179},
+  "chips": {title:"Овощные чипсы", price:159},
+  "cookies": {title:"Овсяное печенье", price:89},
+  "smoothie": {title:"Смузи микс", price:249},
+  "bread": {title:"Хлебцы ржаные", price:99},
+  "energy": {title:"Энергетический микс", price:229},
+  "tea": {title:"Фруктовый чай", price:139},
+  "protein": {title:"Протеиновое печенье", price:159},
+  "berries": {title:"Сухие ягоды", price:189}
+};
+
+function renderCart(){
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  const tbody = document.querySelector("#cartTable tbody");
+  tbody.innerHTML = "";
+  let total = 0;
+  let totalQty = 0;
+
+  cart.forEach((item,i)=>{
+    const product = products[item.id];
+    if(!product) return;
+    const sum = product.price * item.qty;
+    total += sum;
+    totalQty += item.qty;
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${product.title}</td>
+        <td>${product.price} ₽</td>
+        <td><input type="number" class="qty" value="${item.qty}" min="1" data-index="${i}"></td>
+        <td>${sum} ₽</td>
+        <td><button class="btn btn-delete" onclick="removeItem(${i})">Удалить</button></td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("cartTotal").textContent =
+    total > 0 ? `Всего товаров: ${totalQty} | Итого: ${total} ₽` : "Корзина пуста.";
+
+  document.getElementById("cart-link").textContent = `Корзина (${totalQty})`;
+}
+
+function removeItem(i){
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  cart.splice(i,1);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  renderCart();
+}
+
+document.addEventListener("input",(e)=>{
+  if(e.target.classList.contains("qty")){
+    const i = e.target.dataset.index;
+    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    cart[i].qty = parseInt(e.target.value) || 1;
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+  }
+});
+
+/* ====== Авторизация ====== */
+const authLink=document.getElementById("auth-link");
+const profileLink=document.getElementById("profile-link");
+if(localStorage.getItem("currentUser")){
+  authLink.style.display="none"; profileLink.style.display="inline-block";
+}else{
+  authLink.style.display="inline-block"; profileLink.style.display="none";
+}
+
+renderCart();
+</script>
+</body>
+</html>

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<title>Полезные снеки — Главная</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+:root{
+  --container-width:1200px;
+  --accent:#2B7A78;
+  --accent-light:#4CAF50;
+  --accent-orange:#FF9800;
+  --bg-gradient:linear-gradient(135deg,#f9f9f7 0%,#e8f5e9 100%);
+  --text-dark:#2c3e50;
+  --text-light:#666;
+  --white:#fff;
+  --shadow:0 2px 20px rgba(0,0,0,0.1);
+  --shadow-hover:0 10px 40px rgba(0,0,0,0.15);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:Arial, sans-serif;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  background:var(--bg-gradient);
+  color:var(--text-dark);
+}
+
+/* Header */
+header{
+  position:fixed;top:0;left:0;width:100%;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(10px);
+  padding:1rem 0;z-index:1000;
+  box-shadow:var(--shadow);
+}
+.nav { display:flex; justify-content:center; gap:2rem; }
+.nav a{
+  text-decoration:none; color:var(--text-dark); font-weight:500;
+  padding:0.5rem 1.2rem; border-radius:25px; transition:0.25s;
+}
+.nav a:hover{ color:var(--accent-light); background: rgba(76,175,80,0.08); }
+.nav .active{ background:var(--accent-light); color:#fff; }
+
+/* Page container */
+.container{ max-width:var(--container-width); margin:0 auto; padding:1rem; }
+main{ flex:1; padding:140px 0 2rem; }
+
+/* Баннер сайта */
+.site-banner{
+  background: linear-gradient(135deg, var(--accent-light), var(--accent));
+  color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-hover);
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+/* Hero с картинкой и анимацией текста */
+.hero{
+  text-align:center;
+  margin-bottom:32px;
+}
+
+.hero-image{
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border-radius:12px;
+  overflow:hidden;
+  max-width:100%;
+}
+
+.hero-image img{
+  width:100%;
+  height:auto;
+  display:block;
+  object-fit:cover;
+  filter:brightness(0.7);
+}
+
+/* Анимация текста */
+.hero-text{
+  position:absolute;
+  text-align:center;
+  color:#fff;
+  padding:20px;
+}
+
+.hero-text h2, .hero-text p, .hero-text .btn{
+  opacity:0;
+  transform:translateY(20px);
+  animation:fadeInUp 0.8s forwards;
+}
+
+.hero-text h2{
+  animation-delay:0.3s;
+  font-size:2rem;
+  margin-bottom:8px;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+}
+
+.hero-text p{
+  animation-delay:0.6s;
+  font-size:1.1rem;
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.5);
+  margin-bottom:12px;
+}
+
+.hero-text .btn{
+  animation-delay:0.9s;
+  padding:10px 20px;
+  font-size:1rem;
+  background:var(--accent-light);
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  transition:0.25s;
+}
+.hero-text .btn:hover{
+  background:var(--accent);
+  transform:translateY(-2px);
+}
+
+@keyframes fadeInUp{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* Cards grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:2rem;
+}
+@media(max-width:900px){
+  .grid{ grid-template-columns:1fr; }
+}
+
+.card{
+  background:var(--white);
+  border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+  transition:0.25s;
+  display:flex;
+  flex-direction:column;
+  height:100%;
+  overflow:hidden;
+}
+.card:hover{ transform:translateY(-6px); box-shadow:var(--shadow-hover); }
+
+.card img{
+  width:100%;
+  height:400px;
+  object-fit:cover;
+  border-bottom:1px solid #eee;
+}
+.card-content{
+  flex:1;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+}
+.card-content h3{ margin-bottom:8px; color:var(--text-dark); }
+.card-content p{ color:var(--text-light); margin-bottom:16px; flex:1; }
+.card-actions{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+}
+
+/* Buttons */
+.btn{
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.15s;
+}
+.btn:hover{ transform:translateY(-2px); opacity:0.95; }
+.btn-cart{background:var(--accent-orange);}
+
+/* Footer */
+footer{
+  text-align:center;
+  padding:2rem 0;
+  color:var(--text-light);
+}
+
+/* Modal */
+.modal-backdrop{
+  position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; align-items:center; justify-content:center;
+  z-index:2000; padding:20px;
+}
+.modal{
+  width:100%; max-width:700px; background:var(--white); border-radius:12px; overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,0.35);
+  display:flex; flex-direction:column; padding:20px; position:relative;
+}
+.modal img{
+  width:300px;
+  max-width:100%;
+  height:auto;
+  margin:0 auto 16px;
+  border-radius:8px;
+}
+.modal h2{ margin-bottom:8px; text-align:center; }
+.modal p{ color:var(--text-dark); line-height:1.5; margin-bottom:12px; text-align:center; }
+.modal .modal-actions{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:12px;
+}
+.modal .close-btn{
+  position:absolute; top:10px; right:10px; background:transparent; border:none; font-size:24px; cursor:pointer; color:var(--text-dark);
+}
+/* ===== Поиск ===== */
+.search-bar{
+  max-width:400px;
+  margin:0 auto 30px;
+  text-align:center;
+}
+.search-bar input{
+  width:100%;
+  padding:12px 16px;
+  border:2px solid #ddd;
+  border-radius:25px;
+  font-size:1rem;
+  outline:none;
+  transition:0.25s;
+  box-shadow:var(--shadow);
+}
+.search-bar input:focus{
+  border-color:var(--accent-light);
+  box-shadow:var(--shadow-hover);
+}
+
+/* ===== Секция отзывов ===== */
+.reviews-section {
+  margin: 60px 0 40px;
+  padding: 40px 0;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.reviews-title {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--accent);
+  margin-bottom: 30px;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 0 20px;
+}
+
+.review-card {
+  background: #f9f9f7;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.review-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.review-name {
+  font-weight: bold;
+  color: var(--text-dark);
+  margin-bottom: 5px;
+}
+
+.review-rating {
+  color: var(--accent-orange);
+  font-size: 1.1rem;
+}
+
+.review-text {
+  color: var(--text-light);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.review-date {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: var(--text-light);
+  text-align: right;
+}
+
+/* ===== Кнопка Telegram ===== */
+.telegram-support {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.telegram-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #0088cc;
+  color: white;
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 50px;
+  box-shadow: var(--shadow-hover);
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.telegram-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4);
+  background: #0077b3;
+}
+
+.telegram-icon {
+  width: 24px;
+  height: 24px;
+  fill: white;
+}
+
+/* Анимация пульсации для привлечения внимания */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.telegram-btn {
+  animation: pulse 2s infinite;
+}
+
+.telegram-btn:hover {
+  animation: none;
+}
+</style>
+</head>
+<body>
+<header>
+  <nav class="nav">
+    <a href="index.html" class="active">Главная</a>
+    <a href="features.html">Функции</a>
+
+    <a href="auth.html" id="auth-link">Войти</a>
+    <a href="profile.html" id="profile-link" style="display:none;">Профиль</a>
+    <a href="cart.html" id="cart-link">Корзина (0)</a>
+  </nav>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <div class="hero-image">
+      <img src="https://source.unsplash.com/800x400/?healthy,snack" alt="Здоровые снеки">
+      <div class="hero-text">
+        <h2>Вкусно и полезно каждый день</h2>
+        <p>Открой для себя идеальные перекусы — натуральные, свежие и вдохновляющие!</p>
+        <button class="btn" onclick="document.getElementById('productsGrid').scrollIntoView({behavior:'smooth'})">Смотреть товары</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🔔 Баннер сайта -->
+  <div class="site-banner">
+    Полезные снеки — здоровые и вкусные перекусы
+  </div>
+
+  <!-- 🔍 Поиск -->
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Найти товар..." />
+  </div>
+
+  <section class="grid" id="productsGrid"></section>
+
+  <!-- ===== Секция отзывов ===== -->
+  <section class="reviews-section">
+    <h2 class="reviews-title">Отзывы наших клиентов</h2>
+    <div class="reviews-grid" id="reviewsGrid"></div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2025 Полезные снеки</p>
+</footer>
+
+<!-- Кнопка Telegram поддержки -->
+<div class="telegram-support">
+  <a href="https://t.me/snacks_helper_bot" class="telegram-btn" target="_blank" rel="noopener">
+    <svg class="telegram-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.14.141-.259.259-.374.261l.213-3.053 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.136-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+    </svg>
+    Поддержка
+  </a>
+</div>
+
+<!-- Модальное окно -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" role="dialog">
+    <button class="close-btn" id="modalCloseBtn">✕</button>
+    <img id="modalImage" src="" alt="">
+    <h2 id="modalTitle"></h2>
+    <p id="modalShort"></p>
+    <p id="modalDesc"></p>
+    <div class="modal-actions">
+      <button class="btn btn-cart" id="modalAddCart">В корзину</button>
+      <button class="btn" id="modalCloseBtnBottom">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ======= Данные товаров ======= */
+const products = [
+  {id:"miks", title:"Микс орехов", short:"Энергия и витамины.", img:"miks.jpg", fallback:"https://source.unsplash.com/800x800/?nuts", price:199, desc:"Сбалансированный микс из миндаля, фундука, кешью и фисташек."},
+  {id:"crunch", title:"Протеиновый батончик", short:"20г белка для перекуса.", img:"crunch.jpg", fallback:"https://source.unsplash.com/800x800/?protein,bar", price:129, desc:"Протеиновый батончик с овсом, ореховой пастой и белковым концентратом."},
+  {id:"fructs", title:"Фруктовые чипсы", short:"Хрустящая альтернатива сладостям.", img:"fructs.jpg", fallback:"https://source.unsplash.com/800x800/?dried,fruit", price:149, desc:"Сушёные ломтики яблока, банана и киви — без сахара и консервантов."},
+  {id:"granola", title:"Гранола с мёдом", short:"Заряд энергии с утра.", img:"granola.jpg", fallback:"https://source.unsplash.com/800x800/?granola", price:179, desc:"Хрустящая гранола с мёдом, орехами и сухофруктами."},
+  {id:"chips", title:"Овощные чипсы", short:"Хруст без лишнего.", img:"chips.jpg", fallback:"https://source.unsplash.com/800x800/?vegetable,chips", price:159, desc:"Чипсы из свеклы, моркови и кабачка без масла."},
+  {id:"cookies", title:"Овсяное печенье", short:"Полезная сладость.", img:"cookies.jpg", fallback:"https://source.unsplash.com/800x800/?oat,cookies", price:89, desc:"Домашнее овсяное печенье без сахара и муки."},
+  {id:"smoothie", title:"Смузи микс", short:"Свежий фруктовый заряд.", img:"smoothie.jpg", fallback:"https://source.unsplash.com/800x800/?smoothie", price:249, desc:"Фруктово-ягодный смузи с семенами чиа и льна."},
+  {id:"bread", title:"Хлебцы ржаные", short:"Лёгкий перекус.", img:"bread.jpg", fallback:"https://source.unsplash.com/800x800/?crispbread", price:99, desc:"Тонкие ржаные хлебцы с добавлением семян подсолнечника."},
+  {id:"energy", title:"Энергетический микс", short:"Для спорта и активности.", img:"energy.jpg", fallback:"https://source.unsplash.com/800x800/?trail,mix", price:229, desc:"Смесь сухофруктов, семян и орехов для восстановления энергии."},
+  {id:"tea", title:"Фруктовый чай", short:"Тёплый напиток здоровья.", img:"tea.jpg", fallback:"https://source.unsplash.com/800x800/?fruit,tea", price:139, desc:"Смесь сушёных фруктов и трав для ароматного чая."},
+  {id:"protein", title:"Протеиновое печенье", short:"15г белка.", img:"protein.jpg", fallback:"https://source.unsplash.com/800x800/?protein,cookie", price:159, desc:"Печенье с высоким содержанием белка для спортсменов."},
+  {id:"berries", title:"Сухие ягоды", short:"Натуральная сладость.", img:"berries.jpg", fallback:"https://source.unsplash.com/800x800/?dried,berries", price:189, desc:"Ассорти сушёных ягод: клюква, черника, малина."}
+];
+
+/* ======= Данные отзывов ======= */
+const reviews = [
+  {
+    name: "Анна Петрова",
+    rating: "★★★★★",
+    text: "Очень довольна покупкой! Микс орехов просто восхитительный, всегда свежий и хрустящий. Заказываю регулярно!",
+    date: "15.12.2024",
+    product: "Микс орехов"
+  },
+  {
+    name: "Максим Иванов",
+    rating: "★★★★☆",
+    text: "Протеиновые батончики стали моим спасением после тренировок. Вкусно и полезно, но хотелось бы больше разнообразия вкусов.",
+    date: "10.12.2024",
+    product: "Протеиновый батончик"
+  },
+  {
+    name: "Елена Смирнова",
+    rating: "★★★★★",
+    text: "Фруктовые чипсы - идеальный перекус для работы. Никакого сахара, только натуральный вкус! Дети тоже обожают.",
+    date: "08.12.2024",
+    product: "Фруктовые чипсы"
+  },
+  {
+    name: "Дмитрий Козлов",
+    rating: "★★★★★",
+    text: "Гранола с мёдом - это просто объедение! Добавляю в йогурт на завтрак, заряжает энергией на весь день. Рекомендую!",
+    date: "05.12.2024",
+    product: "Гранола с мёдом"
+  },
+  {
+    name: "Ольга Новикова",
+    rating: "★★★★☆",
+    text: "Овощные чипсы очень понравились, особенно свекольные. Хрустящие и нежирные. Отличная альтернатива обычным чипсам!",
+    date: "02.12.2024",
+    product: "Овощные чипсы"
+  },
+  {
+    name: "Иван Сидоров",
+    rating: "★★★★★",
+    text: "Заказывал энергетический микс для похода - просто не заменимая вещь! Компактно, питательно и очень вкусно.",
+    date: "28.11.2024",
+    product: "Энергетический микс"
+  }
+];
+
+/* ======= Рендер карточек товаров ======= */
+const grid = document.getElementById("productsGrid");
+products.forEach(p=>{
+  const div=document.createElement("div");
+  div.className="card";
+  div.innerHTML=`
+    <img src="${p.img}" alt="${p.title}" onerror="this.src='${p.fallback}'">
+    <div class="card-content">
+      <h3>${p.title}</h3>
+      <p>${p.short}</p>
+      <a>Цена:${p.price}р</a>
+      <div class="card-actions">
+        <button class="btn" data-id="${p.id}" data-action="details">Посмотреть</button>
+        <button class="btn btn-cart" data-id="${p.id}" data-action="cart">В корзину</button>
+      </div>
+    </div>
+  `;
+  grid.appendChild(div);
+});
+
+/* ======= Рендер отзывов ======= */
+const reviewsGrid = document.getElementById("reviewsGrid");
+reviews.forEach(review => {
+  const reviewCard = document.createElement("div");
+  reviewCard.className = "review-card";
+  reviewCard.innerHTML = `
+    <div class="review-header">
+      <div class="review-avatar">${review.name.charAt(0)}</div>
+      <div>
+        <div class="review-name">${review.name}</div>
+        <div class="review-rating">${review.rating}</div>
+      </div>
+    </div>
+    <p class="review-text">"${review.text}"</p>
+    <div class="review-date">${review.date} • ${review.product}</div>
+  `;
+  reviewsGrid.appendChild(reviewCard);
+});
+
+/* ======= Модальное окно ======= */
+const modalBackdrop=document.getElementById("modalBackdrop");
+const modalImage=document.getElementById("modalImage");
+const modalTitle=document.getElementById("modalTitle");
+const modalShort=document.getElementById("modalShort");
+const modalDesc=document.getElementById("modalDesc");
+const modalCloseBtn=document.getElementById("modalCloseBtn");
+const modalCloseBtnBottom=document.getElementById("modalCloseBtnBottom");
+const modalAddCart=document.getElementById("modalAddCart");
+
+let activeProduct=null;
+
+function openProduct(id){
+  const p=products.find(x=>x.id===id);
+  if(!p) return;
+  activeProduct=p;
+  modalImage.src=p.img; modalImage.onerror=()=>{modalImage.src=p.fallback};
+  modalTitle.textContent=p.title;
+  modalShort.textContent=`${p.short} • ${p.price} ₽`;
+  modalDesc.textContent=p.desc;
+  modalBackdrop.style.display="flex";
+  document.body.style.overflow="hidden";
+}
+function closeModal(){
+  modalBackdrop.style.display="none";
+  document.body.style.overflow="";
+  activeProduct=null;
+}
+modalCloseBtn.onclick=closeModal;
+modalCloseBtnBottom.onclick=closeModal;
+modalBackdrop.onclick=(e)=>{if(e.target===modalBackdrop) closeModal();}
+document.addEventListener("keydown",(e)=>{if(e.key==="Escape") closeModal();});
+
+/* ======= Корзина ======= */
+function addToCart(productId){
+  let cart=JSON.parse(localStorage.getItem("cart")||"[]");
+  let item=cart.find(x=>x.id===productId);
+  if(item)item.qty++; else cart.push({id:productId,qty:1});
+  localStorage.setItem("cart",JSON.stringify(cart));
+  updateCartCount();
+}
+function updateCartCount(){
+  const cart=JSON.parse(localStorage.getItem("cart")||"[]");
+  const totalQty=cart.reduce((s,i)=>s+i.qty,0);
+  document.getElementById("cart-link").textContent=`Корзина (${totalQty})`;
+}
+updateCartCount();
+
+/* ======= Обработчики кнопок ======= */
+document.addEventListener("click",(e)=>{
+  const btn=e.target.closest("button[data-id]");
+  if(!btn) return;
+  const id=btn.dataset.id;
+  if(btn.dataset.action==="details") openProduct(id);
+  if(btn.dataset.action==="cart"){ addToCart(id); alert("Товар добавлен в корзину!"); }
+});
+
+modalAddCart.onclick=()=>{if(activeProduct){addToCart(activeProduct.id); alert("Товар добавлен в корзину!");}};
+
+/* ======= Вход / профиль ======= */
+const authLink=document.getElementById("auth-link");
+const profileLink=document.getElementById("profile-link");
+if(localStorage.getItem("currentUser")){
+  authLink.style.display="none"; profileLink.style.display="inline-block";
+}else{authLink.style.display="inline-block"; profileLink.style.display="none";}
+
+/* ======= Поиск ======= */
+document.getElementById("searchInput").addEventListener("input", function(){
+  const value = this.value.toLowerCase();
+  const cards = document.querySelectorAll(".card");
+  products.forEach((p, i) => {
+    const match = p.title.toLowerCase().includes(value) || p.short.toLowerCase().includes(value);
+    cards[i].style.display = match ? "flex" : "none";
+  });
+});
+</script>
+</body>
+</html>
